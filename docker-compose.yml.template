@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+    primary:
+        build: ./mongo
+        command: ["--config", "/etc/mongo/mongo.conf", "--replSet", "rs0", "--port", "27017"]
+        hostname: mongodb_primary
+        volumes:
+            - ./opt/data/primary/db:/data/db:delegated
+            - ./opt/data/primary/configdb:/data/configdb:delegated
+        ports:
+            - "27017:27017"
+        networks:
+            default:
+                aliases:
+                    - mongodb_primary
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: [访问账户]
+            MONGO_INITDB_ROOT_PASSWORD: [访问密码]
+            # MONGO_INITDB_DATABASE: [默认DB]
+        restart: always
+
+    secondary:
+        build: ./mongo
+        command: ["--config", "/etc/mongo/mongo.conf", "--replSet", "rs0", "--port", "27018"]
+        hostname: mongodb_secondary
+        volumes:
+            - ./opt/data/secondary/db:/data/db:delegated
+            - ./opt/data/secondary/configdb:/data/configdb:delegated
+        ports:
+            - "27018:27018"
+        networks:
+            default:
+                aliases:
+                    - mongodb_secondary
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: [访问账户]
+            MONGO_INITDB_ROOT_PASSWORD: [访问密码]
+            # MONGO_INITDB_DATABASE: [默认DB]
+        restart: always
+
+    arbiter:
+        build: ./mongo
+        command: ["--config", "/etc/mongo/mongo.conf", "--replSet", "rs0", "--port", "27019"]
+        hostname: mongodb_arbiter
+        volumes:
+            - ./opt/data/arbiter/db:/data/db:delegated
+            - ./opt/data/arbiter/configdb:/data/configdb:delegated
+        ports:
+            - "27019:27019"
+        networks:
+            default:
+                aliases:
+                    - mongodb_arbiter
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: [访问账户]
+            MONGO_INITDB_ROOT_PASSWORD: [访问密码]
+            # MONGO_INITDB_DATABASE: [默认DB]
+        restart: always
+
+networks:
+    default:
+        external: false
