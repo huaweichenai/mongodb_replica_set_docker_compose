@@ -1,0 +1,4 @@
+.env
+opt/
+mongo/security/key
+docker-compose.yml
